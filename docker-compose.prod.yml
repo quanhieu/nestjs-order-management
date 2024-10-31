@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    image: my-registry.com/my-namespace/my-app:latest
+    ports:
+      - '${PORT}:8000'
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - mongodb
+    deploy:
+      restart_policy:
+        condition: on-failure
+    # Use the private registry credentials
+    # These credentials will be used for the pull command in most CI/CD setups
+    secrets:
+      - registry_credentials
+
+  mongodb:
+    image: mongo:6.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+
+# Define secrets for secure credential storage
+secrets:
+  registry_credentials:
+    file: ./registry-credentials.json
