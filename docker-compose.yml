@@ -2,21 +2,21 @@ volumes:
   mongo_data:
 
 services:
-  # order-service:
-  #   container_name: order-service
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - '${APP_PORT}:8000'
-  #   environment:
-  #     - NODE_ENV=${NODE_ENV}
-  #     - DB_HOST=${DB_HOST}
-  #     - DB_USER=${DB_USER}
-  #     - DB_PASSWORD=${DB_PASSWORD}
-  #     - DB_NAME=${DB_NAME}
-  #   depends_on:
-  #     - mongodb
+  order-service:
+    container_name: order-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${APP_PORT}:8000'
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - mongodb
 
   mongodb:
     container_name: mongodb

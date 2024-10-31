@@ -1,8 +1,12 @@
 ## Development start
 
+- Run application
+
 ```
 docker compose up -d
 ```
+
+- Or run `yarn dev`
 
 ## Production start
 
