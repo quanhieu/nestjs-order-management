@@ -12,8 +12,14 @@ To get the `base64-encoded-username-and-password`, run the following command (re
 echo -n 'myusername:mypassword' | base64
 ```
 
-### Start docker compose
+- Update Base64 `auth` to [registry-credentials.json](./registry-credentials.json)
+
+- Start docker compose
 
 ```
 docker compose -f docker-compose.prod.yml up -d
 ```
+
+## Document API
+
+[Swagger](http://localhost:8000/api)

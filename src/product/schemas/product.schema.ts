@@ -1,12 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
+
+export type ProductDocument = Product & Document;
 
 @Schema({ timestamps: true })
 export class Product extends Document {
-  @Prop({ type: Types.ObjectId, required: true, unique: true })
-  productId: Types.ObjectId;
-
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop()
@@ -15,8 +14,8 @@ export class Product extends Document {
   @Prop({ required: true })
   price: number;
 
-  @Prop({ required: true })
-  stock: number;
+  @Prop({ required: true, default: 0 })
+  discount: number;
 
   @Prop()
   // e.g., "Electronics", "Apparel", "Books"

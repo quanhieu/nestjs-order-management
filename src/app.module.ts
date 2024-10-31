@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import configuration from './config/configuration';
 import { LoggingInterceptor } from './shared/interceptor/logging.interceptor';
 import { MongoExceptionFilter } from './shared/filters/mongo-exception.filter';
-import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
+// import { HttpExceptionFilter } from './shared/filters/http-exception-v2.filter';
 import { OrderModule } from './order/order.module';
 import { CustomerModule } from './customer/customer.module';
 import { ProductModule } from './product/product.module';
@@ -26,6 +26,7 @@ import { PaymentModule } from './payment/payment.module';
       useFactory: (configService: ConfigService) => {
         const dbConfig = configService.get('database');
         const uri = dbConfig.uri;
+        console.warn('MongoDB URI: ', uri);
 
         return {
           uri,
@@ -36,9 +37,9 @@ import { PaymentModule } from './payment/payment.module';
       },
     }),
     // custom modules
-    OrderModule,
-    CustomerModule,
     ProductModule,
+    CustomerModule,
+    OrderModule,
     PaymentModule,
   ],
 
@@ -53,10 +54,11 @@ import { PaymentModule } from './payment/payment.module';
       provide: APP_FILTER,
       useClass: MongoExceptionFilter,
     },
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
+    // Global Filters for Handling Errors -> Moved to main.ts
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
   ],
 })
 

@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Order } from './schemas/order.schema';
-import { OrderItem } from './schemas/order-item.schema';
+import { Order, OrderDocument } from './schemas/order.schema';
+import { OrderItem, OrderItemDocument } from './schemas/order-item.schema';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel(Order.name) private orderModel: Model<Order>,
-    @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItem>,
+    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+    @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>,
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
@@ -27,11 +27,14 @@ export class OrderService {
       productId: new Types.ObjectId(item.productId),
       quantity: item.quantity,
       price: item.price,
-      totalPrice: item.quantity * item.price,
+      discount: item.discount,
+      totalPrice: 100 * item.quantity * item.price * (1 - item.discount / 100),
     }));
-    await this.orderItemModel.insertMany(orderItems);
 
-    return savedOrder;
+    const itemCreated = await this.orderItemModel.insertMany(orderItems);
+    savedOrder.items = itemCreated.map((item) => item._id) as unknown as OrderItem[];
+
+    return savedOrder.save();
   }
 
   async findAll(): Promise<Order[]> {

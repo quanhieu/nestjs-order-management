@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { json } from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 
 declare const module: any;
 
@@ -16,6 +17,9 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(json({ limit: '5mb' }));
   app.use(compression());
+
+  // global filter
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // config swagger
   const config = new DocumentBuilder().setTitle('').setDescription('').setVersion('1.0').addBearerAuth().build();

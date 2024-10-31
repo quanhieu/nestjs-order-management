@@ -1,23 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Payment } from './schemas/payment.schema';
+import { Payment, PaymentDocument } from './schemas/payment.schema';
 import { CreatePaymentDto } from './dto';
 
 @Injectable()
 export class PaymentService {
   constructor(
-    @InjectModel(Payment.name) private paymentModel: Model<Payment>,
+    @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,
   ) {}
 
   // Create a payment
   async create(createPaymentDto: CreatePaymentDto): Promise<Payment> {
-    const { orderId, amount, status, method } = createPaymentDto;
+    const { orderId, amount, status, paymentMethod } = createPaymentDto;
     const payment = new this.paymentModel({
       orderId: new Types.ObjectId(orderId),
       amount,
       status,
-      method,
+      paymentMethod,
     });
     return payment.save();
   }
@@ -41,5 +41,13 @@ export class PaymentService {
       .exec();
     if (!payment) throw new NotFoundException(`Payment #${id} not found`);
     return payment;
+  }
+
+  // Delete a payment
+  async remove(id: string): Promise<Payment> {
+    return this.paymentModel.findByIdAndUpdate(id, {
+      deleted: true,
+      deletedAt: new Date(),
+    }).exec();
   }
 }

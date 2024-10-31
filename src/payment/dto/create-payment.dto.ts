@@ -15,7 +15,7 @@ export class CreatePaymentDto {
   @ApiProperty({
     description: 'Status of the payment',
     example: 'PENDING',
-    enum: ['PENDING', 'COMPLETED', 'FAILED'],
+    // enum: ['PENDING', 'COMPLETED', 'FAILED'],
   })
   @IsNotEmpty()
   @IsString()
@@ -27,5 +27,5 @@ export class CreatePaymentDto {
   })
   @IsNotEmpty()
   @IsString()
-  method: string;
+  paymentMethod: string;
 }

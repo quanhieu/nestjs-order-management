@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
+
+export type CustomerDocument = Customer & Document;
 
 @Schema({ timestamps: true })
 export class Customer extends Document {
-  @Prop({ type: Types.ObjectId, required: true, unique: true })
-  customerId: Types.ObjectId;
-
   @Prop({ required: true })
   name: string;
 
@@ -15,22 +14,8 @@ export class Customer extends Document {
   @Prop()
   phone: string;
 
-  @Prop({
-    type: {
-      street: { type: String },
-      city: { type: String },
-      state: { type: String },
-      zipCode: { type: String },
-      country: { type: String },
-    },
-  })
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    country: string;
-  };
+  @Prop({ required: true })
+  address: string;
 
   @Prop()
   createdAt: Date;

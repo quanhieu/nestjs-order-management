@@ -2,33 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsEmail, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class AddressDto {
-  @ApiPropertyOptional({ description: 'Street address', example: '123 Main St' })
-  @IsOptional()
-  @IsString()
-  street?: string;
-
-  @ApiPropertyOptional({ description: 'City of the address', example: 'New York' })
-  @IsOptional()
-  @IsString()
-  city?: string;
-
-  @ApiPropertyOptional({ description: 'State of the address', example: 'NY' })
-  @IsOptional()
-  @IsString()
-  state?: string;
-
-  @ApiPropertyOptional({ description: 'Zip code of the address', example: '10001' })
-  @IsOptional()
-  @IsString()
-  zipCode?: string;
-
-  @ApiPropertyOptional({ description: 'Country of the address', example: 'USA' })
-  @IsOptional()
-  @IsString()
-  country?: string;
-}
-
 export class CreateCustomerDto {
   @ApiProperty({ description: 'The name of the customer', example: 'John Doe' })
   @IsString()
@@ -44,11 +17,11 @@ export class CreateCustomerDto {
   readonly phone?: string;
 
   @ApiPropertyOptional({
-    description: 'The address of the customer',
-    type: AddressDto,
+    description: 'Address, including street, city, state, zip code, and country',
+    example: '123 Main St, Springfield, IL, 62701, USA',
   })
+  @IsString()
   @IsOptional()
-  @ValidateNested()
-  @Type(() => AddressDto)
-  readonly address?: AddressDto;
+  // @ValidateNested()
+  readonly address?: string;
 }
